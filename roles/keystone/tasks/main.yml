@@ -1,4 +1,5 @@
-- name: Add RDO  repository
-  yum:
-    name: https://rdoproject.org/repos/rdo-release.rpm
-    state: present
+---
+
+- include: base.yml
+- include: keystone.yml
+

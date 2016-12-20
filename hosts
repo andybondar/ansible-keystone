@@ -1,3 +1,3 @@
 [keystone]
-192.168.122.116		ansible_connection=ssh		ansible_user=abondar ansible_become=true
+controller		ansible_connection=ssh		ansible_user="{{ user | default('user') }}" ansible_become=true
 

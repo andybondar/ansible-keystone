@@ -1,6 +1,6 @@
 ---
 - name: Install NTP and Keystone
-  hosts: keystone
+  hosts: all
   
   roles:
    - ntp

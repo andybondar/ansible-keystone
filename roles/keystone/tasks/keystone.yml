@@ -1,0 +1,9 @@
+- name: Add RDO repository
+  yum:
+    name: https://repos.fedorapeople.org/repos/openstack/openstack-mitaka/rdo-release-mitaka-6.noarch.rpm
+    state: present
+
+- name: Install Keystone
+  yum:
+    name: openstack-keystone
+    state: installed
