@@ -1,0 +1,19 @@
+--- 
+
+# MySQL Server hardening
+
+- name: Change root password
+  mysql_user: name=root host={{item}} password={{ mysql_root_password | mandatory }} state=present
+  with_items:
+    - '::1'
+    - '127.0.0.1'
+    - 'localhost'
+
+- name: Create .my.cnf
+  template:
+   src: "client.my.cnf.j2"
+   dest: "/root/.my.cnf"
+   owner: root
+   group: root
+   mode: 0600
+
