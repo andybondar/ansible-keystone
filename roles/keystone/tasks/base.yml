@@ -1,21 +1,13 @@
-- name: Add MySQL community repo
-  yum: 
-    name: http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm
-    state: present
-
-- name: Install the base packages
+- name: Install base packages
   yum: name={{ item }} state=installed
   with_items:
-   - mysql
-   - mysql-server
-   - MySQL-python
    - memcached
    - python-memcached
    - httpd
    - mod_wsgi
 
-- name: Start the services
+- name: Start memcached
   service: name={{ item }} state=started enabled=yes
   with_items:
-   - mysqld
    - memcached
+

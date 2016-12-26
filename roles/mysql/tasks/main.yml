@@ -1,9 +1,25 @@
 --- 
+- name: Add MySQL community repo
+  yum:
+    name: http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm
+    state: present
+
+- name: Install MySQL related packages
+  yum: name={{ item }} state=installed
+  with_items:
+   - mysql
+   - mysql-server
+   - MySQL-python
+
+- name: Start MySQL Server
+  service: name={{ item }} state=started enabled=yes
+  with_items:
+   - mysqld
 
 # MySQL Server hardening
 
 - name: Change root password
-  mysql_user: name=root host={{item}} password={{ mysql_root_password | mandatory }} state=present
+  mysql_user: name=root host={{item}} password={{ mysql_root_password | default('root') }} state=present
   with_items:
     - '::1'
     - '127.0.0.1'
@@ -48,17 +64,17 @@
     - DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'
   changed_when: False
 
-# Repetition
-- name: Reload privilege tables
-  command: 'mysql -ne "{{ item }}"'
-  with_items:
-    - FLUSH PRIVILEGES
-  changed_when: False
-
-- name: Create database for Keystone
+- name: Ensure database for Keystone is created
   mysql_db:
+    login_host: 127.0.0.1
+    login_port: 3306
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
     name: keystone
-    state: present
+  register: create_keystone_db
+
+- debug:
+    msg: "create_keystone_db = {{ create_keystone_db.changed }}"
 
 - name: Create user for Keystone DB
   mysql_user:
@@ -68,7 +84,13 @@
     host: "{{ item }}"
     state: present
   with_items:
-    - '::1'
-    - '127.0.0.1'
-    - 'localhost'
+    - "localhost"
+    - "%"
+
+# Repetition
+- name: Reload privilege tables
+  command: 'mysql -ne "{{ item }}"'
+  with_items:
+    - FLUSH PRIVILEGES
+  changed_when: False
 

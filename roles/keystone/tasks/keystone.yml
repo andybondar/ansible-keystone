@@ -24,3 +24,20 @@
    group: root
    mode: 0644
 
+- name: Copy keystone config file
+  template:
+   src: "keystone.conf.j2"
+   dest: "/etc/keystone/keystone.conf"
+   owner: root
+   group: keystone
+   mode: 0640
+
+- name: Ensure Keystone database has been populated
+#  command: /bin/echo Hello!
+  shell: /usr/bin/keystone-manage db_sync
+  become: true
+  become_user: keystone
+#  debug:
+#    msg: "Going to sync Keystone DB"
+  when: create_keystone_db.changed
+

@@ -2,5 +2,4 @@
 
 - include: base.yml
 - include: keystone.yml
-- include: mysql.yml
 
