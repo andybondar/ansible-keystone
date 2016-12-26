@@ -7,3 +7,20 @@
   yum:
     name: openstack-keystone
     state: installed
+
+- name: Copy http config file
+  template:
+   src: "httpd.conf.j2"
+   dest: "/etc/httpd/conf/httpd.conf"
+   owner: root
+   group: root
+   mode: 0644
+
+- name: Copy wsgi-keystone config file
+  template:
+   src: "wsgi-keystone.conf.j2"
+   dest: "/etc/httpd/conf.d/wsgi-keystone.conf"
+   owner: root
+   group: root
+   mode: 0644
+

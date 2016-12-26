@@ -1,0 +1,9 @@
+---
+
+# Webserver name
+web_server_name: "{{ server_name | default('controller') }}"
+#web_server_name: controller 
+
+# Keystone ports
+keystone_admin_port: 35357
+keystone_public_port: 5000
