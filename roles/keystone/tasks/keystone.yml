@@ -33,11 +33,18 @@
    mode: 0640
 
 - name: Ensure Keystone database has been populated
-#  command: /bin/echo Hello!
   shell: /usr/bin/keystone-manage db_sync
   become: true
   become_user: keystone
-#  debug:
-#    msg: "Going to sync Keystone DB"
   when: create_keystone_db.changed
+
+# Disabling SELinux is temporary
+- name: Disable SELinux
+  selinux:
+    state: disabled
+
+- name: Start services
+  service: name={{ item }} state=started enabled=yes
+  with_items:
+    - httpd
 
